@@ -1,0 +1,46 @@
+Option Explicit
+
+Sub Run_Day11()
+    
+    Dim i, x, y, x2, y2, Sum, Max_Sum, Bx, By, Bi As Long
+    Dim rack_ID, start_power, power_serial, power_rack, hundreds, final_power(1 To 300, 1 To 300) As Long
+    Max_Sum = 0
+    Sum = 0
+    
+    For x = 1 To 300
+        For y = 1 To 300
+            rack_ID = x + 10
+            start_power = y * rack_ID
+            power_serial = start_power + 3463
+            power_rack = power_serial * rack_ID
+            hundreds = ((power_rack Mod 1000) - (power_rack Mod 100)) / 100
+            final_power(x, y) = hundreds - 5
+            'Cells(y, x).Value = final_power(x, y)
+        Next y
+    Next x
+    
+    'Solely set i = 3 for part 1
+    For i = 1 To 300 'Do not recommend this - it blows up computer.  Break it up into chunks
+        For x = 1 To (300 - i)
+            For y = 1 To (300 - i)
+                For x2 = x To (x + i - 1)
+                    For y2 = y To (y + i - 1)
+                        Sum = Sum + final_power(x2, y2)
+                    Next y2
+                Next x2
+                If Sum > Max_Sum Then
+                    Max_Sum = Sum
+                    Bx = x
+                    By = y
+                    Bi = i
+                End If
+                Sum = 0
+            Next y
+        Next x
+    Next i
+        
+    MsgBox Bx & "," & By & vbCrLf _
+    & "Size: " & Bi & vbCrLf _
+    & "Sum: " & Max_Sum
+    
+End Sub
