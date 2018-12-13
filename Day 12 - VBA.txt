@@ -1,0 +1,132 @@
+Option Explicit
+
+Sub Run_Day12()
+
+    Dim initial As String
+    Dim pot(-2002 To 2002, 0 To 1000) As String
+    Dim curr_pot, pot_input(1 To 32), pot_output(1 To 32) As String
+    Dim gen As Long
+    Dim c, d, sum As Long
+    gen = 0
+    
+    pot_input(1) = "....."
+    pot_input(2) = "#...."
+    pot_input(3) = "..###"
+    pot_input(4) = "##..#"
+    pot_input(5) = ".###."
+    pot_input(6) = "...##"
+    pot_input(7) = "#.#.."
+    pot_input(8) = "..##."
+    pot_input(9) = "##.#."
+    pot_input(10) = "..#.."
+    pot_input(11) = ".#..."
+    pot_input(12) = "##.##"
+    pot_input(13) = "....#"
+    pot_input(14) = ".#.#."
+    pot_input(15) = "#..#."
+    pot_input(16) = "#.###"
+    pot_input(17) = ".##.#"
+    pot_input(18) = ".####"
+    pot_input(19) = ".#..#"
+    pot_input(20) = "####."
+    pot_input(21) = "#...#"
+    pot_input(22) = ".#.##"
+    pot_input(23) = "#..##"
+    pot_input(24) = "..#.#"
+    pot_input(25) = "#.##."
+    pot_input(26) = "###.."
+    pot_input(27) = "#####"
+    pot_input(28) = "###.#"
+    pot_input(29) = "...#."
+    pot_input(30) = "#.#.#"
+    pot_input(31) = ".##.."
+    pot_input(32) = "##..."
+    
+    pot_output(1) = "."
+    pot_output(2) = "."
+    pot_output(3) = "."
+    pot_output(4) = "#"
+    pot_output(5) = "#"
+    pot_output(6) = "."
+    pot_output(7) = "."
+    pot_output(8) = "."
+    pot_output(9) = "#"
+    pot_output(10) = "."
+    pot_output(11) = "#"
+    pot_output(12) = "."
+    pot_output(13) = "."
+    pot_output(14) = "."
+    pot_output(15) = "#"
+    pot_output(16) = "."
+    pot_output(17) = "#"
+    pot_output(18) = "."
+    pot_output(19) = "."
+    pot_output(20) = "#"
+    pot_output(21) = "#"
+    pot_output(22) = "#"
+    pot_output(23) = "."
+    pot_output(24) = "#"
+    pot_output(25) = "."
+    pot_output(26) = "."
+    pot_output(27) = "#"
+    pot_output(28) = "#"
+    pot_output(29) = "#"
+    pot_output(30) = "#"
+    pot_output(31) = "."
+    pot_output(32) = "#"
+
+    
+    initial = "#.......##.###.#.#..##..##..#.#.###..###..##.#.#..##....#####..##.#.....########....#....##.#..##..."
+    
+    pot(-1, 0) = "."
+    pot(-2, 0) = "."
+    pot(100, 0) = "."
+    pot(101, 0) = "."
+    
+    For c = 0 To 99
+        pot(c, 0) = Mid(initial, c + 1, 1)
+    Next c
+    
+    
+    For gen = 1 To 1000
+        For c = -2000 To 2000
+            If pot(c - 2, gen - 1) = "" Then
+                pot(c - 2, gen - 1) = "."
+            End If
+            If pot(c - 1, gen - 1) = "" Then
+                pot(c - 1, gen - 1) = "."
+            End If
+            If pot(c + 2, gen - 1) = "" Then
+                pot(c + 2, gen - 1) = "."
+            End If
+            If pot(c + 1, gen - 1) = "" Then
+                pot(c + 1, gen - 1) = "."
+            End If
+            curr_pot = pot(c - 2, gen - 1) & pot(c - 1, gen - 1) & pot(c, gen - 1) & pot(c + 1, gen - 1) & pot(c + 2, gen - 1)
+            For d = 1 To 32
+                If curr_pot = pot_input(d) Then
+                    pot(c, gen) = pot_output(d)
+                End If
+            Next d
+            If pot(c, gen) = "" Then
+                pot(c, gen) = "."
+            End If
+        Next c
+        
+    Next gen
+    
+For gen = 0 To 1000
+    For c = -2000 To 2000
+        If pot(c, gen) = "#" Then
+            sum = sum + c
+        End If
+    Next c
+    Cells(gen + 1, 1).Value = sum
+    sum = 0
+Next gen
+
+'At gen = 109, the difference in the sum from one generation to the next is always 65.  Cell A21 gives you part 1 (the value at gen 20).
+'The answer for part 2 = The sum at gen = 109 (which is 8041) plus (50,000,000,000 - 109) * 65.
+'The actual answer is 3250000000956.
+
+End Sub
