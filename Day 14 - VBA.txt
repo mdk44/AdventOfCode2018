@@ -1,0 +1,77 @@
+Option Explicit
+
+'Work in progress, not executed yet
+
+Sub Run_Day14()
+
+    Dim score(1 To 330000) As Long
+    Dim new_score As Integer
+    Dim final_score As String
+    Dim elf1, elf2 As Integer
+    Dim c, d, pos, i As Long
+    Dim no_recipes As Long
+    no_recipes = 320851
+    
+    For c = 1 To 330000
+        score(c) = -1
+    Next c
+    
+    elf1 = 3
+    elf2 = 7
+    score(1) = elf1
+    score(2) = elf2
+    Cells(1, 1).Value = 1
+    Cells(2, 1).Value = 2
+    
+    For i = 1 To 330000
+        new_score = elf1 + elf2
+        If new_score > 9 Then
+            c = 1
+            Do While score(c) <> -1
+                c = c + 1
+            Loop
+            score(c) = Left(new_score, 1)
+            score(c + 1) = Right(new_score, 1)
+        Else
+            c = 1
+            Do While score(c) <> -1
+                c = c + 1
+            Loop
+            score(c) = new_score
+        End If
+        elf1 = elf1 + 1
+        elf2 = elf2 + 1
+        
+        d = 1
+        Do While d <= elf1
+            pos = Cells(1, 1).Value
+            If score(pos + 1) = -1 Then
+                Cells(1, 1).Value = 1
+            Else
+                Cells(1, 1).Value = Cells(1, 1).Value + 1
+            End If
+            d = d + 1
+        Loop
+        elf1 = score(Cells(1, 1).Value)
+        
+        d = 1
+        Do While d <= elf2
+            pos = Cells(2, 1).Value
+            If score(pos + 1) = -1 Then
+                Cells(2, 1).Value = 1
+            Else
+                Cells(2, 1).Value = Cells(2, 1).Value + 1
+            End If
+            d = d + 1
+        Loop
+        elf2 = score(Cells(2, 1).Value)
+        
+    Next i
+    
+    For c = (no_recipes + 1) To (no_recipes + 10)
+        final_score = final_score & score(c)
+    Next c
+    
+    Cells(1, 5).Value = final_score
+
+End Sub
