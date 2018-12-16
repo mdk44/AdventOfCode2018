@@ -1,18 +1,16 @@
 Option Explicit
 
-'Work in progress, not executed yet
-
 Sub Run_Day14()
 
-    Dim score(1 To 330000) As Long
+    Dim score(1 To 500000) As Long
     Dim new_score As Integer
     Dim final_score As String
     Dim elf1, elf2 As Integer
-    Dim c, d, pos, i As Long
+    Dim c, d, pos, bookend As Long
     Dim no_recipes As Long
     no_recipes = 320851
     
-    For c = 1 To 330000
+    For c = 1 To (no_recipes + 11)
         score(c) = -1
     Next c
     
@@ -22,22 +20,25 @@ Sub Run_Day14()
     score(2) = elf2
     Cells(1, 1).Value = 1
     Cells(2, 1).Value = 2
+    bookend = 2
     
-    For i = 1 To 330000
+    Do While bookend < (no_recipes + 11)
         new_score = elf1 + elf2
         If new_score > 9 Then
-            c = 1
+            c = bookend
             Do While score(c) <> -1
                 c = c + 1
             Loop
             score(c) = Left(new_score, 1)
             score(c + 1) = Right(new_score, 1)
+            bookend = c + 1
         Else
-            c = 1
+            c = bookend
             Do While score(c) <> -1
                 c = c + 1
             Loop
             score(c) = new_score
+            bookend = c
         End If
         elf1 = elf1 + 1
         elf2 = elf2 + 1
@@ -66,7 +67,8 @@ Sub Run_Day14()
         Loop
         elf2 = score(Cells(2, 1).Value)
         
-    Next i
+        
+    Loop
     
     For c = (no_recipes + 1) To (no_recipes + 10)
         final_score = final_score & score(c)
