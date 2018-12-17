@@ -1,6 +1,5 @@
 Option Explicit
 
-
 Sub Run_Day14_Pt2()
 
     Dim score(1 To 30000000) As Long
@@ -23,7 +22,7 @@ Sub Run_Day14_Pt2()
     pos2 = 2
     bookend = 2
     
-    Do Until (final_score = "320581" Or final_score2 = "320581")
+    Do Until (final_score = "320851" Or final_score2 = "320851")
         new_score = elf1 + elf2
         If new_score > 9 Then
             c = bookend
@@ -42,7 +41,6 @@ Sub Run_Day14_Pt2()
             bookend = c
         End If
         
-        'NEED TO CHECK THIS
         If bookend >= 10 Then
             final_score = score(bookend - 5) & score(bookend - 4) & score(bookend - 3) & score(bookend - 2) & score(bookend - 1) & score(bookend)
             final_score2 = score(bookend - 6) & score(bookend - 5) & score(bookend - 4) & score(bookend - 3) & score(bookend - 2) & score(bookend - 1)
@@ -51,10 +49,10 @@ Sub Run_Day14_Pt2()
             final_score2 = ""
         End If
         
-        If final_score = "320581" Then
+        If final_score = "320851" Then
             MsgBox (bookend - 6)
             Exit Sub
-        ElseIf final_score2 = "320581" Then
+        ElseIf final_score2 = "320851" Then
             MsgBox (bookend - 7)
             Exit Sub
         End If
