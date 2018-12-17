@@ -1,0 +1,93 @@
+Option Explicit
+
+
+Sub Run_Day14_Pt2()
+
+    Dim score(1 To 30000000) As Long
+    Dim new_score As Integer
+    Dim final_score, final_score2 As String
+    Dim elf1, elf2 As Integer
+    Dim c, d, pos, pos1, pos2, bookend As Long
+    Dim no_recipes As Long
+    no_recipes = 320851
+    
+    For c = 1 To 30000000
+        score(c) = -1
+    Next c
+    
+    elf1 = 3
+    elf2 = 7
+    score(1) = elf1
+    score(2) = elf2
+    pos1 = 1
+    pos2 = 2
+    bookend = 2
+    
+    Do Until (final_score = "320581" Or final_score2 = "320581")
+        new_score = elf1 + elf2
+        If new_score > 9 Then
+            c = bookend
+            Do While score(c) <> -1
+                c = c + 1
+            Loop
+            score(c) = Left(new_score, 1)
+            score(c + 1) = Right(new_score, 1)
+            bookend = c + 1
+        Else
+            c = bookend
+            Do While score(c) <> -1
+                c = c + 1
+            Loop
+            score(c) = new_score
+            bookend = c
+        End If
+        
+        'NEED TO CHECK THIS
+        If bookend >= 10 Then
+            final_score = score(bookend - 5) & score(bookend - 4) & score(bookend - 3) & score(bookend - 2) & score(bookend - 1) & score(bookend)
+            final_score2 = score(bookend - 6) & score(bookend - 5) & score(bookend - 4) & score(bookend - 3) & score(bookend - 2) & score(bookend - 1)
+        Else
+            final_score = ""
+            final_score2 = ""
+        End If
+        
+        If final_score = "320581" Then
+            MsgBox (bookend - 6)
+            Exit Sub
+        ElseIf final_score2 = "320581" Then
+            MsgBox (bookend - 7)
+            Exit Sub
+        End If
+        
+        elf1 = elf1 + 1
+        elf2 = elf2 + 1
+        
+        d = 1
+        Do While d <= elf1
+            pos = pos1
+            If score(pos + 1) = -1 Then
+                pos1 = 1
+            Else
+                pos1 = pos1 + 1
+            End If
+            d = d + 1
+        Loop
+        elf1 = score(pos1)
+        
+        d = 1
+        Do While d <= elf2
+            pos = pos2
+            If score(pos + 1) = -1 Then
+                pos2 = 1
+            Else
+                pos2 = pos2 + 1
+            End If
+            d = d + 1
+        Loop
+        elf2 = score(pos2)
+         
+    Loop
+    
+    MsgBox (bookend - 6)
+    
+End Sub
