@@ -1,0 +1,93 @@
+Option Explicit
+
+Sub Day_18_P1()
+
+    Dim Location(1 To 100, 1 To 100), New_Location(1 To 50, 1 To 50) As String
+    Dim x, y, size_x, size_y, x2, y2, num_cells, minute, count, count_tree, count_ly As Integer
+    'num_cells = 10   'test
+    num_cells = 50 'actuals
+    count = 0
+    count_ly = 0
+    count_tree = 0
+    
+    'Sheets("Test").Select 'test
+    Sheets("Input").Select
+    For x = 1 To num_cells
+        For y = 1 To num_cells
+            Location(x, y) = Cells(y, x).value
+        Next y
+    Next x
+    
+    For minute = 1 To 10
+        For x = 1 To num_cells
+            For y = 1 To num_cells
+                
+                If x = 1 Then
+                    size_x = 2
+                Else
+                    size_x = 3
+                End If
+                
+                If y = 1 Then
+                    size_y = 2
+                Else
+                    size_y = 3
+                End If
+                
+                If Location(x, y) = "." Then
+                    For x2 = (x - size_x + 2) To (x + 1)
+                        For y2 = (y - size_y + 2) To (y + 1)
+                            If Location(x2, y2) = "|" Then count = count + 1
+                        Next y2
+                    Next x2
+                    If count >= 3 Then
+                        New_Location(x, y) = "|"
+                    Else
+                        New_Location(x, y) = "."
+                    End If
+                    count = 0
+                ElseIf Location(x, y) = "|" Then
+                    For x2 = (x - size_x + 2) To (x + 1)
+                        For y2 = (y - size_y + 2) To (y + 1)
+                            If Location(x2, y2) = "#" Then count = count + 1
+                        Next y2
+                    Next x2
+                    If count >= 3 Then
+                        New_Location(x, y) = "#"
+                    Else
+                        New_Location(x, y) = "|"
+                    End If
+                    count = 0
+                ElseIf Location(x, y) = "#" Then
+                    For x2 = (x - size_x + 2) To (x + 1)
+                        For y2 = (y - size_y + 2) To (y + 1)
+                            If Location(x2, y2) = "#" Then count_ly = count_ly + 1
+                            If Location(x2, y2) = "|" Then count_tree = count_tree + 1
+                        Next y2
+                    Next x2
+                    If (count_tree >= 1 And count_ly >= 2) Then
+                        New_Location(x, y) = "#"
+                    Else
+                        New_Location(x, y) = "."
+                    End If
+                    count_ly = 0
+                    count_tree = 0
+                End If
+            Next y
+        Next x
+        
+        For x = 1 To num_cells
+            For y = 1 To num_cells
+                Location(x, y) = New_Location(x, y)
+            Next y
+        Next x
+    Next minute
+    
+    Sheets("Output").Select
+    For x = 1 To num_cells
+        For y = 1 To num_cells
+            Cells(y, x).value = Location(x, y)
+        Next y
+    Next x
+
+End Sub
