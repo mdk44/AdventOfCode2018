@@ -1,0 +1,72 @@
+Option Explicit
+ 
+Sub Run_Day9_P2()
+    'Keyboard Shortcut: Ctrl+r
+    'Puzzle Input: 476 players; last marble is worth 7165700 points
+   
+    Dim no_players, last_marble, curr_marble, last_position, curr_player, position, max_score, c As Long
+    Dim player(1 To 500), marble(0 To 7200000) As Long
+   
+    For c = 0 To 7200000
+        marble(c) = -1
+    Next c
+   
+    marble(0) = 0
+    marble(1) = 1
+    curr_marble = 2
+    curr_player = 2
+    position = 1
+    last_position = 1
+    max_score = 0
+    no_players = 476
+    last_marble = 7165700
+    Cells(1, 1).Select
+   
+    For curr_marble = 2 To last_marble
+        If curr_marble Mod 23 <> 0 Then
+           
+            If marble(position + 1) = -1 Then
+                position = 1
+            Else
+                position = position + 2
+            End If
+           
+            For c = curr_marble To position + 1 Step -1
+                marble(c) = marble(c - 1)
+            Next c
+            marble(position) = curr_marble
+            last_position = last_position + 1
+           
+        ElseIf curr_marble Mod 23 = 0 Then
+           
+            If position < 7 Then
+                position = last_position + position - 6
+            Else
+                position = position - 7
+            End If
+           
+            player(curr_player) = player(curr_player) + marble(position) + curr_marble
+           
+            c = position
+            Do Until marble(c) = -1
+                marble(c) = marble(c + 1)
+                c = c + 1
+            Loop
+            last_position = last_position - 1
+           
+        End If
+        If player(curr_player) > max_score Then
+            max_score = player(curr_player)
+        End If
+       
+        If curr_player + 1 > no_players Then
+            curr_player = 1
+        Else
+            curr_player = curr_player + 1
+        End If
+       
+    Next curr_marble
+
+    MsgBox max_score
+
+End Sub
