@@ -1,5 +1,5 @@
 text_file = open('Day 8 Input.csv')
-lines = text_file.read().split(' ')\
+lines = text_file.read().split(' ')
 
 # def print_node(node):
 #     print "number of children: " + str(node.no_child)
