@@ -1,0 +1,45 @@
+text_file = open('Day 8 Input.csv')
+lines = text_file.read().split(' ')\
+
+def meta_sum(node):
+    node_sum = 0
+    if node.no_child == 0:
+        for c in node.metadata:
+            node_sum = node_sum + c
+    else:
+        for c in node.metadata:
+            if c - 1 >= 0 and c - 1 < len(node.children):
+                node_sum = node_sum + meta_sum(node.children[c-1])
+    return node_sum
+
+class Node:
+    def __init__ (self, parent, no_child, no_metadata):
+        self.parent = parent
+        self.no_child = no_child
+        self.no_metadata = no_metadata
+        self.children = []
+        self.metadata = []
+
+root_node = Node(None,int(lines[0]),int(lines[1]))
+
+curr_node = root_node
+
+score=0
+i=2
+while i <len(lines):
+
+    if len(curr_node.children) != curr_node.no_child:
+        child_node = Node(curr_node,int(lines[i]),int(lines[i+1]))
+        curr_node.children.append(child_node)
+        curr_node = child_node
+        i += 2
+        continue
+    if len(curr_node.metadata) != curr_node.no_metadata:
+        curr_node.metadata.append(int(lines[i]))
+        score = score + int(lines[i])
+        i += 1
+    else:
+        curr_node = curr_node.parent
+
+print score
+print meta_sum(root_node)
