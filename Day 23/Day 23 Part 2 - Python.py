@@ -53,9 +53,9 @@ final_man_dist = 0
 new_man_dist = 0
 min_man_dist = 10000000
 
-for x2 in range(-1000, 1000):
-    for y2 in range(-1000, 1000):
-        for z2 in range(-1000, 1000):
+for x2 in range(minX, maxX):
+    for y2 in range(minY, maxY):
+        for z2 in range(minZ, maxZ):
             range_num =  0
             for line_input in input_data:
                 man_dist = abs(x2 - line_input.x) + abs(y2 - line_input.y) + abs(z2 - line_input.z)
