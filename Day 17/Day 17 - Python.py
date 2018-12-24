@@ -2,7 +2,9 @@ import re
 import sys
 import time
 from PIL import Image, ImageDraw
-sys.setrecursionlimit(3000) # Do I need this?
+
+sys.setrecursionlimit(3000)
+
 
 class Clay_Bar:
     def __init__ (self, line):
