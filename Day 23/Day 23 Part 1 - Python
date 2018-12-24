@@ -1,2 +1,39 @@
 # Day 23, Part 1
 
+import re
+import sys
+import time
+from PIL import Image, ImageDraw
+
+class Data_Read:
+    def __init__ (self, line):
+        numbers = re.findall(r"\d+",line)
+        self.x = int(numbers[0])
+        self.y = int(numbers[1])
+        self.z = int(numbers[2])
+        self.r = int(numbers[3])
+        # print vars(self)
+    def __str__ (self):
+        return str(vars(self))
+
+input_file = 'Day 23\\Day 23 Test.txt'
+output_file = 'Day 23\\test.png'
+
+text_file = open(input_file)
+lines = text_file.read().split('\n')
+
+input_data = []
+for line in lines:
+    input_data.append(Data_Read(line))
+
+maxR = input_data[0].r
+posRx = 0
+posRy = 0
+posRz = 0
+for line_input in input_data:
+    if line_input.r > maxR:
+        maxR = line_input.r
+        porRx = line_input.x
+        porRy = line_input.y
+        porRz = line_input.z
+
