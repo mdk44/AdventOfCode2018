@@ -1,9 +1,7 @@
-# Day 23, Part 1
+# Day 23, Part 2
 
 import re
 import sys
-import time
-from PIL import Image, ImageDraw
 
 class Data_Read:
     def __init__ (self, line):
