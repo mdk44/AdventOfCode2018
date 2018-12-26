@@ -19,9 +19,40 @@ input_file = 'Day 25\\Day 25 Test 0.txt'
 text_file = open(input_file)
 lines = text_file.read().split('\n')
 
-input_data = []
+inp = []
 for line in lines:
-    input_data.append(Data_Read(line))
+    inp.append(Data_Read(line))
 
-for line in lines:
-    print line
+constellation = 0
+point = 0
+
+c = 0
+d = 1
+point = 0
+const = 0
+no_const = 0
+
+def man_dist(p1, p2):
+    p1x = inp[p1].x
+    p1y = inp[p1].y
+    p1z = inp[p1].z
+    p1aa = inp[p1].aa
+    p2x = inp[p2].x
+    p2y = inp[p2].y
+    p2z = inp[p2].z
+    p2aa = inp[p2].aa
+    dist = abs(p1x - p2x) + abs(p1y - p2y) + abs(p1z - p2z) + abs(p1aa - p2aa)
+    if dist <= 3:
+        return 1
+    else:
+        return 0
+
+const = []
+point = 0
+for point in range(0,len(inp)+1):
+    const[point] = 0
+
+# Assign a constellation to each point (first const --> point value = 1).
+# Basically: for point 0, check all points in its constellation.  Move to first point that's homeless, check rest of homeless points
+# Point increases by 1 for each new constellation
+# Print out point
