@@ -42,15 +42,26 @@ def man_dist(p1, p2):
     p2z = inp[p2].z
     p2aa = inp[p2].aa
     dist = abs(p1x - p2x) + abs(p1y - p2y) + abs(p1z - p2z) + abs(p1aa - p2aa)
-    if dist <= 3:
-        return 1
-    else:
-        return 0
+    return dist
 
-const = []
-point = 0
-for point in range(0,len(inp)+1):
-    const[point] = 0
+const = {}
+for c in range(0,len(inp)):
+    const[c] = 0
+    
+point = 1
+
+for d in range(0,len(inp)):
+    if const[d] == 0:
+        const[d] = point
+        for c in range(0,len(inp)):
+            if const[c] == 0 and c != d:
+                if man_dist(c,d) <= 3:
+                    const[c] = const[d]
+        point += 1
+
+for d in range(0,len(inp)):
+    print str(d) + " " + str(const[d])
+        
 
 # Assign a constellation to each point (first const --> point value = 1).
 # Basically: for point 0, check all points in its constellation.  Move to first point that's homeless, check rest of homeless points

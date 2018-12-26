@@ -52,24 +52,21 @@ def image_grid(grid, bounds):
     standing = (0, 255, 255)
     clay = (153, 0, 0)
     spring = (5, 91, 61)
-    error = (244, 66, 206)
     width = bounds['x_hi'] - bounds['x_low']+2
-    height = bounds['y_hi'] - bounds['y_low']+2
+    height = bounds['y_hi']+1
     img = Image.new('RGB', (width, height), color = sand)
     dr = ImageDraw.Draw(img)
     for y in grid:
         for x in grid[y]:
             real_x = x - bounds['x_low']
-            if grid[y][x] == CLAY:
+            if y == 0 and x == 500:
+                dr.rectangle(((real_x-1,y),(real_x+1,y)),fill=spring)
+            elif grid[y][x] == CLAY:
                 dr.rectangle(((real_x,y),(real_x,y)),fill=clay)
             elif grid[y][x] == FLOWING:
                 dr.rectangle(((real_x,y),(real_x,y)),fill=flowing)
             elif grid[y][x] == STANDING:
                 dr.rectangle(((real_x,y),(real_x,y)),fill=standing)
-            elif grid[y][x] == SPRING:
-                dr.rectangle(((real_x-1,y),(real_x+1,y)),fill=spring)
-            if y == 100 and x == 489:
-                dr.rectangle(((real_x,y),(real_x,y)),fill=error)
     img.save(output_file)
 
 text_file = open(input_file)
@@ -92,6 +89,8 @@ for clay_bar in clay_bars:
         bounds["x_hi"] = clay_bar.x_hi
     if clay_bar.y_hi > bounds["y_hi"]:
         bounds["y_hi"] = clay_bar.y_hi
+    if clay_bar.y_low < bounds["y_low"]:
+        bounds["y_low"] = clay_bar.y_low
 
 grid = {}
 
@@ -105,9 +104,6 @@ for clay_bar in clay_bars:
     for y in range(clay_bar.y_low, clay_bar.y_hi + 1):
         for x in range(clay_bar.x_low, clay_bar.x_hi + 1):
             grid[y][x] = CLAY
-    
-image_grid(grid,bounds)
-
 
 def spread_left(x,y):
     while grid[y+1][x] != SAND and grid[y][x] != CLAY:
@@ -125,31 +121,31 @@ def spread_out(x,y):
     water_type = STANDING
     if grid[y][left] != CLAY or grid[y][right] != CLAY:
         water_type = FLOWING
+    for x2 in range(left+1, right):
+        if grid[y][x2] != CLAY:
+            grid[y][x2] = water_type
     if grid[y][left] != CLAY:
         waterfall(left,y)
     if grid[y][right] != CLAY:
         waterfall(right,y)
-    for x2 in range(left, right+1):
-        if grid[y][x2] != CLAY:
-            grid[y][x2] = water_type
+    
 
 def waterfall(x,y):
-    start_y = y
-    # while y+1 in grid and grid[start_y + 1][x] != FLOWING:
-    while y<98 and grid[start_y + 1][x] != FLOWING:
-        while y+1 in grid and grid[y+1][x] == SAND:
-            y+=1
-        if y+1 in grid and grid[y+1][x] != FLOWING:
-            spread_out(x,y)
-        else:
+    if y+1 in grid:
+        if grid[y+1][x] == FLOWING:
             grid[y][x] = FLOWING
-        print "X: " + str(x) + " " + "Y: " + str(y)
-        waterfall(x,start_y)
+        else:
+            if grid[y+1][x] == SAND:
+                grid[y][x] = FLOWING
+                waterfall(x,y+1)
+            elif grid[y+1][x] == CLAY:
+                spread_out(x,y)
+            if grid[y+1][x] == STANDING:
+                spread_out(x,y)
+    else:
+        grid[y][x] = FLOWING
 
-# try:
 waterfall(500,0)
-# except:
-#     print "lol wtf"
 
 image_grid(grid,bounds)
 
@@ -157,9 +153,9 @@ water_p1 = 0
 water_p2 = 0
 for y in grid:
     for x in grid[y]:
-        if grid[y][x] == FLOWING or grid[y][x] == STANDING:
+        if y >= bounds['y_low'] and (grid[y][x] == FLOWING or grid[y][x] == STANDING):
             water_p1 = water_p1 + 1
-        if grid[y][x] == FLOWING:
+        if y >= bounds['y_low'] and grid[y][x] == STANDING:
             water_p2 = water_p2 + 1
 
 print "Part 1: " + str(water_p1)
