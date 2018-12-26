@@ -125,10 +125,10 @@ def spread_out(x,y):
     water_type = STANDING
     if grid[y][left] != CLAY or grid[y][right] != CLAY:
         water_type = FLOWING
-    if grid[y][right] != CLAY:
-        waterfall(right,y)
     if grid[y][left] != CLAY:
         waterfall(left,y)
+    if grid[y][right] != CLAY:
+        waterfall(right,y)
     for x2 in range(left, right+1):
         if grid[y][x2] != CLAY:
             grid[y][x2] = water_type
