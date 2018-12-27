@@ -14,7 +14,16 @@ class Data_Read:
     def __str__ (self):
         return str(vars(self))
 
-input_file = 'Day 25\\Day 25 Test 3.txt'
+# input_file = 'Day 25\\Day 25 Test 0.txt'
+# Answer should be 2 -- CORRECT
+# input_file = 'Day 25\\Day 25 Test 1.txt'
+# Answer should be 4 -- CORRECT
+# input_file = 'Day 25\\Day 25 Test 2.txt'
+# Answer should be 3 -- CORRECT
+# input_file = 'Day 25\\Day 25 Test 3.txt'
+# Answer should be 8 -- CORRECT
+input_file = 'Day 25\\Day 25 Input.txt'
+# Generated answer: 381 -- CORRECT
 
 text_file = open(input_file)
 lines = text_file.read().split('\n')
@@ -49,24 +58,27 @@ for c in range(0,len(inp)):
     const[c] = 0
     
 point = 1
-const[0] = 1
 
 for d in range(0,len(inp)):
-    added = False
-    for c in range(0,len(inp)):
-        if c != d:
-            if const[c] != 0 and const[d] == 0 and man_dist(c,d) <= 3:
-                const[d] = const[c]
-                added = True
-            if const[d] != 0 and const[c] == 0 and man_dist(c,d) <= 3:
+    if const[d] == 0:
+        const[d] = point
+        point += 1
+    for c in range(d,len(inp)):
+        if man_dist(c,d) <= 3:
+            if const[c] != 0:
+                old_const = const[d]
+                for i in range(0,len(inp)):
+                    if const[i] == old_const:
+                        const[i] = const[c]
+            else:
                 const[c] = const[d]
-                added = True
-    if added == False:
-        if const[d] == 0:
-            const[d] = point
-            point += 1
 
-print "Part 1: " + str(point) + " constellations"
+unique_const = []
+for i in range(0,len(inp)):
+    if const[i] not in unique_const:
+        unique_const.append(const[i])
 
-for c in range(0,len(inp)):
-    print str(inp[c]) + " " + str(const[c])
+print "Part 1: " + str(len(unique_const)) + " constellations"
+
+# for c in range(0,len(inp)):
+#     print str(inp[c].x) + " " + str(inp[c].y) + " " + str(inp[c].z) + " " + str(inp[c].aa) + "          " + str(const[c])
