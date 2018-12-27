@@ -14,7 +14,7 @@ class Data_Read:
     def __str__ (self):
         return str(vars(self))
 
-input_file = 'Day 25\\Day 25 Test 0.txt'
+input_file = 'Day 25\\Day 25 Test 3.txt'
 
 text_file = open(input_file)
 lines = text_file.read().split('\n')
@@ -49,21 +49,24 @@ for c in range(0,len(inp)):
     const[c] = 0
     
 point = 1
+const[0] = 1
 
 for d in range(0,len(inp)):
-    if const[d] == 0:
-        const[d] = point
-        for c in range(0,len(inp)):
-            if const[c] == 0 and c != d:
-                if man_dist(c,d) <= 3:
-                    const[c] = const[d]
-        point += 1
+    added = False
+    for c in range(0,len(inp)):
+        if c != d:
+            if const[c] != 0 and const[d] == 0 and man_dist(c,d) <= 3:
+                const[d] = const[c]
+                added = True
+            if const[d] != 0 and const[c] == 0 and man_dist(c,d) <= 3:
+                const[c] = const[d]
+                added = True
+    if added == False:
+        if const[d] == 0:
+            const[d] = point
+            point += 1
 
-for d in range(0,len(inp)):
-    print str(d) + " " + str(const[d])
-        
+print "Part 1: " + str(point) + " constellations"
 
-# Assign a constellation to each point (first const --> point value = 1).
-# Basically: for point 0, check all points in its constellation.  Move to first point that's homeless, check rest of homeless points
-# Point increases by 1 for each new constellation
-# Print out point
+for c in range(0,len(inp)):
+    print str(inp[c]) + " " + str(const[c])
