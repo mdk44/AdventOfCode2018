@@ -2,17 +2,10 @@
 
 import re
 
-input_file = 'Day 16\\Day 16 Test.txt'
+input_file = 'Day 16\\Day 16 Input.txt'
 
 text_file = open(input_file)
 lines = text_file.read().split('\n')
-
-def effect(fn):
-    def new(before, instr):
-        after = list(before)
-        after[instr[3]] = fn(before, instr[1], instr[2])
-        return after
-    return new
 
 def addr(before, instr):
     new_after = list(before)
@@ -29,32 +22,112 @@ def mulr(before, instr):
     new_after[instr[3]] = before[instr[1]] * before[instr[2]]
     return new_after
 
-muli = effect(lambda before,x,y: before[x]*y)
-banr = effect(lambda before,x,y: before[x] & before[y])
-bani = effect(lambda before,x,y: before[x] & y)
-borr = effect(lambda before,x,y: before[x] | before[y])
-bori = effect(lambda before,x,y: before[x] | y)
-setr = effect(lambda before,x,y: before[x])
-seti = effect(lambda before,x,y: x)
-gtir = effect(lambda before,x,y: 1 if x > before[y] else 0)
-gtri = effect(lambda before,x,y: 1 if before[x] > y else 0)
-gtrr = effect(lambda before,x,y: 1 if before[x] > before[y] else 0)
-eqir = effect(lambda before,x,y: 1 if x == before[y] else 0)
-eqri = effect(lambda before,x,y: 1 if before[x] == y else 0)
-eqrr = effect(lambda before,x,y: 1 if before[x] == before[y] else 0)
+def muli(before, instr):
+    new_after = list(before)
+    new_after[instr[3]] = before[instr[1]] * instr[2]
+    return new_after
 
-opcodes = []
-    # addr, addi,
-    # mulr, muli,
-    # banr, bani,
-    # borr, bori,
-    # setr, seti,
-    # gtir, gtri, gtrr,
-    # eqir, eqri, eqrr
+def banr(before, instr):
+    new_after = list(before)
+    new_after[instr[3]] = before[instr[1]] & before[instr[2]]
+    return new_after
 
-# options = {}
-# for code in range(16):
-#     options[code] = list(enumerate(opcodes))
+def bani(before, instr):
+    new_after = list(before)
+    new_after[instr[3]] = before[instr[1]] * instr[2]
+    return new_after
+
+def borr(before, instr):
+    new_after = list(before)
+    new_after[instr[3]] = before[instr[1]] | before[instr[2]]
+    return new_after
+
+def bori(before, instr):
+    new_after = list(before)
+    new_after[instr[3]] = before[instr[1]] * instr[2]
+    return new_after
+
+def setr(before, instr):
+    new_after = list(before)
+    new_after[instr[3]] = before[instr[1]]
+    return new_after
+
+def seti(before, instr):
+    new_after = list(before)
+    new_after[instr[3]] = instr[1]
+    return new_after
+
+def gtir(before, instr):
+    new_after = list(before)
+    if instr[1] > before[instr[2]]:
+        new_after[instr[3]] = 1
+    else:
+        new_after[instr[3]] = 0
+    return new_after
+
+def gtri(before, instr):
+    new_after = list(before)
+    if before[instr[1]] > instr[2]:
+        new_after[instr[3]] = 1
+    else:
+        new_after[instr[3]] = 0
+    return new_after
+
+def gtrr(before, instr):
+    new_after = list(before)
+    if before[instr[1]] > before[instr[2]]:
+        new_after[instr[3]] = 1
+    else:
+        new_after[instr[3]] = 0
+    return new_after
+
+def eqir(before, instr):
+    new_after = list(before)
+    if instr[1] == before[instr[2]]:
+        new_after[instr[3]] = 1
+    else:
+        new_after[instr[3]] = 0
+    return new_after
+
+def eqri(before, instr):
+    new_after = list(before)
+    if before[instr[1]] == instr[2]:
+        new_after[instr[3]] = 1
+    else:
+        new_after[instr[3]] = 0
+    return new_after
+
+def eqrr(before, instr):
+    new_after = list(before)
+    if before[instr[1]] == before[instr[2]]:
+        new_after[instr[3]] = 1
+    else:
+        new_after[instr[3]] = 0
+    return new_after
+
+opcodes = {
+    0: addr,
+    1: addi,
+    2: mulr,
+    3: muli,
+    4: banr,
+    5: bani,
+    6: borr,
+    7: bori,
+    8: setr,
+    9: seti,
+    10: gtir,
+    11: gtri,
+    12: gtrr,
+    13: eqir,
+    14: eqri,
+    15: eqrr
+}
+
+
+options = {}
+for code in range(16):
+    options[code] = list(enumerate(opcodes))
 
 # Part 1
 
@@ -64,26 +137,16 @@ for i in range(0, len(lines), 4):
         before = map(int, re.findall(r'\d+', lines[i]))
         instr = map(int, re.findall(r'\d+', lines[i+1]))
         after = map(int, re.findall(r'\d+', lines[i+2]))
-        opcodes[0] = addr(before, instr)
-        opcodes[0] = addi(before, instr)
-        print opcodes
-        # options[instr[0]] = [(index,fn) for (index,fn) in options[instr[0]] if fn(before,instr) == after]
-
-        # matches = 0
-        # for index,fn in options[instr[0]]:
-        #     if fn(before, instr) == after:
-        #         matches += 1
-        # if matches >= 3:
-        #     ans += 1
+        
+        match = 0
+        for c in opcodes:
+            calc_after = opcodes[c](before, instr)
+            if calc_after == after:
+                match += 1
+        if match > 2:
+            ans += 1
 
 print ans
-print before
-print instr
-print after
-# print matches
-print addr(before, instr)
-print addi(before, instr)
-
 
 # for _ in range(16):
 #     for code in range(16):
