@@ -34,7 +34,7 @@ def banr(before, instr):
 
 def bani(before, instr):
     new_after = list(before)
-    new_after[instr[3]] = before[instr[1]] * instr[2]
+    new_after[instr[3]] = before[instr[1]] & instr[2]
     return new_after
 
 def borr(before, instr):
@@ -44,7 +44,7 @@ def borr(before, instr):
 
 def bori(before, instr):
     new_after = list(before)
-    new_after[instr[3]] = before[instr[1]] * instr[2]
+    new_after[instr[3]] = before[instr[1]] | instr[2]
     return new_after
 
 def setr(before, instr):
@@ -146,7 +146,7 @@ for i in range(0, len(lines), 4):
         if match > 2:
             ans += 1
 
-print ans
+print 'Part 1: ' + str(ans)
 
 # for _ in range(16):
 #     for code in range(16):
