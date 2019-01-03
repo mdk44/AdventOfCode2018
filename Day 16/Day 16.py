@@ -151,6 +151,8 @@ for i in range(0, len(lines), 4):
         if len(code) == 1:
             print str(code) + ' ' + str(instr[0])
 
+# Part 2
+
 registers = [0, 0, 0, 0]
 known_opcodes = {
     15: addr,
