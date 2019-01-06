@@ -50,7 +50,40 @@ def image_grid(grid):
                     dr.rectangle(((real_x + 1,real_y),(real_x + 1,real_y)),fill=track)
                 if y + 1 in grid and grid[y+1][x] != ' ':
                     dr.rectangle(((real_x,real_y + 1),(real_x,real_y + 1)),fill=track)
+            elif grid[y][x] == 'X':
+                dr.rectangle(((real_x,real_y),(real_x,real_y)),fill=crash)
+                if x + 1 in grid and grid[y][x+1] != ' ':
+                    dr.rectangle(((real_x + 1,real_y),(real_x + 1,real_y)),fill=track)
+                if y + 1 in grid and grid[y+1][x] != ' ':
+                    dr.rectangle(((real_x,real_y + 1),(real_x,real_y + 1)),fill=track)
     img.save(output_file)
+
+def move_left(x, y, curr_cart, curr_dir):
+    if x - 1 in curr_grid:
+        if curr_grid[y][x-1] == '-':
+            curr_grid[y][x-1] = '<'
+            curr_grid[y][x] = prev_grid[y][x]
+            curr_cart = '<'
+        elif curr_grid[y][x-1] == '/':
+            curr_grid[y][x-1] = 'v'
+            curr_grid[y][x] = prev_grid[y][x]
+            curr_cart = 'v'
+        elif curr_grid[y][x-1] == '\\':
+            curr_grid[y][x-1] = '^'
+            curr_grid[y][x] = prev_grid[y][x]
+            curr_cart = '^'
+        elif curr_grid[y][x-1] == '+':
+            curr_grid[y][x] = prev_grid[y][x]
+            if curr_dir == 'L':
+                curr_grid[y][x-1] = 'v'
+                curr_cart = 'v'
+            elif curr_dir == 'S':
+                curr_grid[y][x-1] = '<'
+                curr_cart = '<'
+            elif curr_dir == 'R':
+                curr_grid[y][x-1] = '^'
+                curr_cart = '^'
+    return curr_cart, curr_dir
 
 carts = 0
 cart = []
@@ -62,6 +95,9 @@ for y in range(0,len(lines)):
         if curr_grid[y][x] == '>' or curr_grid[y][x] == '<' or curr_grid[y][x] == '^' or curr_grid[y][x] == 'v':
             carts += 1
             cart.append(curr_grid[y][x])
+
+# Start the loop here:
+prev_grid = curr_grid
 
 print "Initial Grid:"
 print_grid(curr_grid)
