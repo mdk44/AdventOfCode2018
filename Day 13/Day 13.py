@@ -58,31 +58,34 @@ def image_grid(grid):
                     dr.rectangle(((real_x,real_y + 1),(real_x,real_y + 1)),fill=track)
     img.save(output_file)
 
-def move_left(x, y, curr_cart, curr_dir):
-    if x - 1 in curr_grid:
-        if curr_grid[y][x-1] == '-':
-            curr_grid[y][x-1] = '<'
-            curr_grid[y][x] = prev_grid[y][x]
-            curr_cart = '<'
-        elif curr_grid[y][x-1] == '/':
-            curr_grid[y][x-1] = 'v'
-            curr_grid[y][x] = prev_grid[y][x]
+def move_right(x, y, curr_cart, curr_dir):
+    if x + 1 in curr_grid:
+        if curr_grid[y][x+1] == '-':
+            curr_grid[y][x+1] = '>'
+            # curr_grid[y][x] = prev_grid[y][x]
+            curr_cart = '>'
+        elif curr_grid[y][x+1] == '\\':
+            curr_grid[y][x+1] = 'v'
+            # curr_grid[y][x] = prev_grid[y][x]
             curr_cart = 'v'
-        elif curr_grid[y][x-1] == '\\':
-            curr_grid[y][x-1] = '^'
-            curr_grid[y][x] = prev_grid[y][x]
+        elif curr_grid[y][x+1] == '/':
+            curr_grid[y][x+1] = '^'
+            # curr_grid[y][x] = prev_grid[y][x]
             curr_cart = '^'
-        elif curr_grid[y][x-1] == '+':
-            curr_grid[y][x] = prev_grid[y][x]
+        elif curr_grid[y][x+1] == '+':
+            # curr_grid[y][x] = prev_grid[y][x]
             if curr_dir == 'L':
+                curr_grid[y][x+1] = '^'
+                curr_cart = '^'
+                curr_dir = 'S'
+            elif curr_dir == 'S':
+                curr_grid[y][x+1] = '>'
+                curr_cart = '>'
+                curr_dir = 'R'
+            elif curr_dir == 'R':
                 curr_grid[y][x-1] = 'v'
                 curr_cart = 'v'
-            elif curr_dir == 'S':
-                curr_grid[y][x-1] = '<'
-                curr_cart = '<'
-            elif curr_dir == 'R':
-                curr_grid[y][x-1] = '^'
-                curr_cart = '^'
+                curr_dir = 'L'
     return curr_cart, curr_dir
 
 carts = 0
@@ -96,8 +99,12 @@ for y in range(0,len(lines)):
             carts += 1
             cart.append(curr_grid[y][x])
 
-# Start the loop here:
-prev_grid = curr_grid
+grid_track = {}
+for y in range(0,len(lines)):
+    grid_track[y] = {}
+    for x in range(0,len(lines[0])):
+        grid_track[y][x] = lines[y][x]
+        # some mapping that turns carts into track based on surrounding blanks
 
 print "Initial Grid:"
 print_grid(curr_grid)
@@ -107,5 +114,18 @@ cart_dir = []
 for i in range(0,len(cart)):
     cart_dir.append('L')
 
+print cart
+print cart_dir
+
+print 'Track:'
+print_grid(grid_track)
+
+for y in curr_grid:
+    for x in curr_grid[y]:
+        if curr_grid[y][x] == '>':
+            cart[0],cart_dir[0] = move_right(x, y, cart[0], cart_dir[0])
+
+print "New Grid:"
+print_grid(curr_grid)
 print cart
 print cart_dir
