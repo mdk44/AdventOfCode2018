@@ -2,9 +2,13 @@ from PIL import Image, ImageDraw
 
 input_file = 'Day 13\\Day 13 Test.txt'
 # input_file = 'Day 13\\Day 13 Input.txt'
+input_track = 'Day 13\\Day 13 Test Track.txt'
+# input_track = 'Day 13\\Day 13 Input Track.txt'
 output_file = 'Day 13\\test.png'
 text_file = open(input_file)
+track_file = open(input_track)
 lines = text_file.read().split('\n')
+lines2 = track_file.read().split('\n')
 
 def print_grid(grid):
     for y in sorted(grid.iterkeys()):
@@ -62,18 +66,18 @@ def move_right(x, y, curr_cart, curr_dir):
     if x + 1 in curr_grid:
         if curr_grid[y][x+1] == '-':
             curr_grid[y][x+1] = '>'
-            # curr_grid[y][x] = prev_grid[y][x]
+            curr_grid[y][x] = grid_track[y][x]
             curr_cart = '>'
         elif curr_grid[y][x+1] == '\\':
             curr_grid[y][x+1] = 'v'
-            # curr_grid[y][x] = prev_grid[y][x]
+            curr_grid[y][x] = grid_track[y][x]
             curr_cart = 'v'
         elif curr_grid[y][x+1] == '/':
             curr_grid[y][x+1] = '^'
-            # curr_grid[y][x] = prev_grid[y][x]
+            curr_grid[y][x] = grid_track[y][x]
             curr_cart = '^'
         elif curr_grid[y][x+1] == '+':
-            # curr_grid[y][x] = prev_grid[y][x]
+            curr_grid[y][x] = grid_track[y][x]
             if curr_dir == 'L':
                 curr_grid[y][x+1] = '^'
                 curr_cart = '^'
@@ -100,11 +104,10 @@ for y in range(0,len(lines)):
             cart.append(curr_grid[y][x])
 
 grid_track = {}
-for y in range(0,len(lines)):
+for y in range(0,len(lines2)):
     grid_track[y] = {}
-    for x in range(0,len(lines[0])):
-        grid_track[y][x] = lines[y][x]
-        # some mapping that turns carts into track based on surrounding blanks
+    for x in range(0,len(lines2[0])):
+        grid_track[y][x] = lines2[y][x]
 
 print "Initial Grid:"
 print_grid(curr_grid)
