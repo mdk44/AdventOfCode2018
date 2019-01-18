@@ -215,25 +215,38 @@ cart_dir = []
 for i in range(0,len(cart)):
     cart_dir.append('L')
 
-print cart
-print cart_dir
+# print cart
+# print cart_dir
 
-print 'Track:'
-print_grid(grid_track)
 
+# need to figure out how to connect carts to the array.  e.g. once cart[0] moves, it's been moved this tick.
+moved = []
+for c in range(0,len(cart)):
+    moved.append(False)
+
+i = 0
 for y in curr_grid:
     for x in curr_grid[y]:
-        if curr_grid[y][x] == '>':
-            cart[0],cart_dir[0] = move_right(x, y, cart[0], cart_dir[0])
-        if curr_grid[y][x] == 'v':
-            cart[0],cart_dir[0] = move_down(x, y, cart[0], cart_dir[0])
-        if curr_grid[y][x] == '<':
-            cart[0],cart_dir[0] = move_left(x, y, cart[0], cart_dir[0])
-        if curr_grid[y][x] == '<':
-            cart[0],cart_dir[0] = move_left(x, y, cart[0], cart_dir[0])
+        if i < len(cart) and moved[i] == False:
+            if curr_grid[y][x] == '>':
+                cart[i],cart_dir[i] = move_right(x, y, cart[0], cart_dir[0])
+                moved[i] = True
+                i += 1
+            if curr_grid[y][x] == 'v':
+                cart[i],cart_dir[i] = move_down(x, y, cart[0], cart_dir[0])
+                moved[i] = True
+                i += 1
+            if curr_grid[y][x] == '<':
+                cart[i],cart_dir[i] = move_left(x, y, cart[0], cart_dir[0])
+                moved[i] = True
+                i += 1
+            if curr_grid[y][x] == '<':
+                cart[i],cart_dir[i] = move_left(x, y, cart[0], cart_dir[0])
+                moved[i] = True
+                i += 1
+            
 
 print "New Grid:"
 print_grid(curr_grid)
-print carts
-print cart
-print cart_dir
+# print cart
+# print cart_dir
