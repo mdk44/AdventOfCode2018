@@ -64,7 +64,9 @@ def image_grid(grid):
 
 def move_right(x, y, curr_cart, curr_dir):
     if x + 1 in curr_grid:
-        if curr_grid[y][x+1] == '-':
+        if curr_grid[y][x+1] == '>' or curr_grid[y][x+1] == '<' or curr_grid[y][x+1] == 'v' or curr_grid[y][x+1] == '^':
+            curr_grid[y][x+1] = 'X'
+        elif curr_grid[y][x+1] == '-':
             curr_grid[y][x+1] = '>'
             curr_grid[y][x] = grid_track[y][x]
             curr_cart = '>'
@@ -87,8 +89,104 @@ def move_right(x, y, curr_cart, curr_dir):
                 curr_cart = '>'
                 curr_dir = 'R'
             elif curr_dir == 'R':
+                curr_grid[y][x+1] = 'v'
+                curr_cart = 'v'
+                curr_dir = 'L'
+    return curr_cart, curr_dir
+
+def move_left(x, y, curr_cart, curr_dir):
+    if curr_grid[y][x-1] == '>' or curr_grid[y][x+1] == '<' or curr_grid[y][x+1] == 'v' or curr_grid[y][x+1] == '^':
+            curr_grid[y][x-1] = 'X'
+    elif x - 1 in curr_grid:
+        if curr_grid[y][x-1] == '-':
+            curr_grid[y][x-1] = '<'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = '<'
+        elif curr_grid[y][x-1] == '\\':
+            curr_grid[y][x-1] = '^'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = '^'
+        elif curr_grid[y][x-1] == '/':
+            curr_grid[y][x-1] = 'v'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = 'v'
+        elif curr_grid[y][x-1] == '+':
+            curr_grid[y][x] = grid_track[y][x]
+            if curr_dir == 'L':
                 curr_grid[y][x-1] = 'v'
                 curr_cart = 'v'
+                curr_dir = 'S'
+            elif curr_dir == 'S':
+                curr_grid[y][x-1] = '<'
+                curr_cart = '<'
+                curr_dir = 'R'
+            elif curr_dir == 'R':
+                curr_grid[y][x-1] = '^'
+                curr_cart = '^'
+                curr_dir = 'L'
+    return curr_cart, curr_dir
+
+def move_down(x, y, curr_cart, curr_dir):
+    if curr_grid[y+1][x] == '>' or curr_grid[y+1][x] == '<' or curr_grid[y+1][x] == 'v' or curr_grid[y+1][x] == '^':
+            curr_grid[y+1][x] = 'X'
+    elif y + 1 in curr_grid:
+        if curr_grid[y+1][x] == '|':
+            curr_grid[y+1][x] = 'v'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = 'v'
+        elif curr_grid[y+1][x] == '\\':
+            curr_grid[y+1][x] = '>'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = '>'
+        elif curr_grid[y+1][x] == '/':
+            curr_grid[y+1][x] = '<'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = '<'
+        elif curr_grid[y+1][x] == '+':
+            curr_grid[y][x] = grid_track[y][x]
+            if curr_dir == 'L':
+                curr_grid[y+1][x] = '>'
+                curr_cart = '>'
+                curr_dir = 'S'
+            elif curr_dir == 'S':
+                curr_grid[y+1][x] = 'v'
+                curr_cart = 'v'
+                curr_dir = 'R'
+            elif curr_dir == 'R':
+                curr_grid[y+1][x] = '<'
+                curr_cart = '<'
+                curr_dir = 'L'
+    return curr_cart, curr_dir
+
+def move_up(x, y, curr_cart, curr_dir):
+    if curr_grid[y-1][x] == '>' or curr_grid[y-1][x] == '<' or curr_grid[y-1][x] == 'v' or curr_grid[y-1][x] == '^':
+            curr_grid[y-1][x] = 'X'
+    elif y - 1 in curr_grid:
+        if curr_grid[y-1][x] == '|':
+            curr_grid[y-1][x] = '^'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = '^'
+        elif curr_grid[y-1][x] == '\\':
+            curr_grid[y-1][x] = '<'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = '<'
+        elif curr_grid[y-1][x] == '/':
+            curr_grid[y-1][x] = '>'
+            curr_grid[y][x] = grid_track[y][x]
+            curr_cart = '>'
+        elif curr_grid[y-1][x] == '+':
+            curr_grid[y][x] = grid_track[y][x]
+            if curr_dir == 'L':
+                curr_grid[y-1][x] = '<'
+                curr_cart = '<'
+                curr_dir = 'S'
+            elif curr_dir == 'S':
+                curr_grid[y-1][x] = '^'
+                curr_cart = '^'
+                curr_dir = 'R'
+            elif curr_dir == 'R':
+                curr_grid[y-1][x] = '>'
+                curr_cart = '>'
                 curr_dir = 'L'
     return curr_cart, curr_dir
 
@@ -127,8 +225,15 @@ for y in curr_grid:
     for x in curr_grid[y]:
         if curr_grid[y][x] == '>':
             cart[0],cart_dir[0] = move_right(x, y, cart[0], cart_dir[0])
+        if curr_grid[y][x] == 'v':
+            cart[0],cart_dir[0] = move_down(x, y, cart[0], cart_dir[0])
+        if curr_grid[y][x] == '<':
+            cart[0],cart_dir[0] = move_left(x, y, cart[0], cart_dir[0])
+        if curr_grid[y][x] == '<':
+            cart[0],cart_dir[0] = move_left(x, y, cart[0], cart_dir[0])
 
 print "New Grid:"
 print_grid(curr_grid)
+print carts
 print cart
 print cart_dir
